@@ -58,7 +58,7 @@ Partisan needs none for the common case. It honors your `testbench.yaml` (provid
 
 ## Notes
 
-- Models that use factories in a package need the usual `newFactory()` method (or `HasFactory<…>` generic) pointing at your `Database\Factories` namespace — partisan generates the factory in the right place; wiring it to the model remains a one-liner in your model.
+- `make:model Invoice --factory` wires the model to its package factory automatically: the `HasFactory` docblock points at your `Database\Factories` namespace and a `#[UseFactory(InvoiceFactory::class)]` attribute is added, so `Invoice::factory()` resolves at runtime with no manual `newFactory()`. If a future Laravel stub ships its own factory wiring, partisan detects it and only corrects the namespace.
 - `make:provider` writes the class into `src/Providers`; registering it in your package's service provider chain is up to you.
 
 ## Testing

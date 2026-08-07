@@ -5,10 +5,12 @@ namespace Packstub\Partisan;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Console\FactoryMakeCommand as CanvasFactoryMakeCommand;
+use Orchestra\Canvas\Console\ModelMakeCommand as CanvasModelMakeCommand;
 use Orchestra\Canvas\Console\TestMakeCommand as CanvasTestMakeCommand;
 use Orchestra\Canvas\Core\PresetManager;
 use Packstub\Partisan\Console\AboutCommand;
 use Packstub\Partisan\Console\FactoryMakeCommand;
+use Packstub\Partisan\Console\ModelMakeCommand;
 use Packstub\Partisan\Console\TestMakeCommand;
 
 class PartisanServiceProvider extends ServiceProvider
@@ -25,6 +27,7 @@ class PartisanServiceProvider extends ServiceProvider
         });
 
         $this->app->extend(CanvasFactoryMakeCommand::class, static fn ($command, $app) => new FactoryMakeCommand($app['files']));
+        $this->app->extend(CanvasModelMakeCommand::class, static fn ($command, $app) => new ModelMakeCommand($app['files']));
         $this->app->extend(CanvasTestMakeCommand::class, static fn ($command, $app) => new TestMakeCommand($app['files']));
 
         $this->commands([
