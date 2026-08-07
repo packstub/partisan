@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+$loader = require $_composer_autoload_path ?? __DIR__.'/../vendor/autoload.php';
+
+$workingPath = is_string(getenv('PARTISAN_WORKING_PATH'))
+    ? getenv('PARTISAN_WORKING_PATH')
+    : (is_string(getenv('TESTBENCH_WORKING_PATH')) ? getenv('TESTBENCH_WORKING_PATH') : getcwd());
+
+define('TESTBENCH_CORE', true);
+define('TESTBENCH_WORKING_PATH', $workingPath);
+
+try {
+    $package = Packstub\Partisan\PackageContext::fromComposer($workingPath);
+} catch (RuntimeException $error) {
+    fwrite(STDERR, 'partisan: '.$error->getMessage().PHP_EOL);
+    exit(1);
+}
+
+// Make the package's own classes resolvable even when the booted autoloader
+// belongs to another root package (e.g. a shared vendor directory).
+if ($loader instanceof Composer\Autoload\ClassLoader) {
+    foreach ($package->autoload as $prefix => $paths) {
+        $loader->addPsr4($prefix, $paths);
+    }
+}
+
+$config = Orchestra\Testbench\Foundation\Config::loadFromYaml(
+    workingPath: $workingPath,
+    defaults: [
+        'providers' => [],
+        'dont-discover' => [],
+    ],
+);
+
+$commander = new Packstub\Partisan\Console\Commander($config, $workingPath, $package);
+
+$commander->handle();

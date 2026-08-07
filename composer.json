@@ -1,0 +1,48 @@
+{
+    "name": "packstub/partisan",
+    "description": "Artisan for Laravel packages — run make: generators from your package directory and get files in src/ with your package namespace. Built on Orchestra Testbench.",
+    "keywords": ["laravel", "artisan", "package", "generator", "testbench", "workbench"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ion Caliman",
+            "email": "support@packstub.dev"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "orchestra/canvas": "^10.0 || ^11.0",
+        "orchestra/sidekick": "^1.2",
+        "orchestra/testbench": "^10.0 || ^11.0"
+    },
+    "require-dev": {
+        "filament/filament": "^4.0",
+        "pestphp/pest": "^3.7 || ^4.0",
+        "symfony/process": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Packstub\\Partisan\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Packstub\\Partisan\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/partisan"
+    ],
+    "scripts": {
+        "test": "pest"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

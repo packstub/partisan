@@ -1,0 +1,21 @@
+{
+    "name": "acme/widget",
+    "description": "Fixture package used by partisan's test suite.",
+    "autoload": {
+        "psr-4": {
+            "Acme\\Widget\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acme\\Widget\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Acme\\Widget\\Providers\\AdminPanelProvider"
+            ]
+        }
+    }
+}
