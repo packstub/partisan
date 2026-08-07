@@ -42,6 +42,35 @@ The `workbench` and `laravel` presets stay available per command (`make:model De
 
 Run `vendor/bin/partisan partisan:about` to see exactly how your package was mapped.
 
+## A shorter command
+
+`vendor/bin/partisan` is a lot of typing for a tool you reach for constantly. Add a shell alias:
+
+```bash
+# ~/.zshrc or ~/.bashrc
+alias pa="vendor/bin/partisan"
+```
+
+Then, from your package root:
+
+```bash
+pa make:model Invoice
+```
+
+If you often work from subdirectories, use a function that finds the nearest `vendor/bin/partisan` upward instead:
+
+```bash
+pa() {
+  local dir=$PWD
+  while [ "$dir" != "/" ]; do
+    [ -x "$dir/vendor/bin/partisan" ] && { "$dir/vendor/bin/partisan" "$@"; return; }
+    dir=$(dirname "$dir")
+  done
+  echo "no vendor/bin/partisan here — composer require --dev packstub/partisan" >&2
+  return 1
+}
+```
+
 ## Filament plugins
 
 If your package targets a Filament panel, declare a panel provider (in `extra.laravel.providers`) whose discovery paths use `app_path()` — partisan remaps `app_path()` to `src/`, so Filament's generators follow along:
