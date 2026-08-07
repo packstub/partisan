@@ -22,12 +22,25 @@ class Commander extends TestbenchCommander
         protected readonly PackageContext $package,
     ) {
         parent::__construct($config, $workingPath);
+
+        // The package's own providers (composer.json extra.laravel.providers)
+        // go through Testbench's config so they register at the same
+        // bootstrap phase as testbench.yaml providers — early enough for
+        // their commands, late enough for config/mergeConfigFrom to work.
+        if (getenv('PARTISAN_DISCOVER') !== '0') {
+            // Merged by hand instead of Config::addProviders(): a commented-out
+            // providers list in testbench.yaml parses as null, which the
+            // helper doesn't tolerate.
+            $this->config['providers'] = array_values(array_unique(array_merge(
+                (array) $this->config['providers'],
+                array_filter($this->package->providers, 'class_exists'),
+            )));
+        }
     }
 
     /**
      * Remap the skeleton application onto the package before Testbench
-     * registers providers, then auto-register the package's own providers so
-     * its commands are available without a testbench.yaml.
+     * registers providers.
      */
     protected function resolveApplicationCallback()
     {
@@ -37,14 +50,6 @@ class Commander extends TestbenchCommander
             $this->package->applyTo($app);
 
             $testbench($app);
-
-            if (getenv('PARTISAN_DISCOVER') !== '0') {
-                foreach ($this->package->providers as $provider) {
-                    if (class_exists($provider)) {
-                        $app->register($provider);
-                    }
-                }
-            }
         };
     }
 }

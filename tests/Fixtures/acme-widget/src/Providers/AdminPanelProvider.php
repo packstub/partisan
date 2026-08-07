@@ -7,6 +7,18 @@ use Filament\PanelProvider;
 
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * Requires the config service during register(), like real package
+     * providers do — guards partisan against registering providers before
+     * the application is bootstrapped enough for mergeConfigFrom().
+     */
+    public function register(): void
+    {
+        parent::register();
+
+        $this->mergeConfigFrom(__DIR__.'/../../config/widget.php', 'widget');
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel

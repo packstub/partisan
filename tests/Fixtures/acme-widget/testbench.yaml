@@ -1,0 +1,4 @@
+# Mirrors laravel/package-skeleton: a providers key whose entries are all
+# commented out parses as null and must not break partisan.
+providers:
+  # - Workbench\App\Providers\WorkbenchServiceProvider
