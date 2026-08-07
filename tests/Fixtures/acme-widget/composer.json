@@ -14,7 +14,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Acme\\Widget\\Providers\\AdminPanelProvider"
+                "Acme\\Widget\\Providers\\AdminPanelProvider",
+                "Acme\\Widget\\WidgetServiceProvider"
             ]
         }
     }

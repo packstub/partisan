@@ -33,7 +33,15 @@ class Commander extends TestbenchCommander
             // helper doesn't tolerate.
             $this->config['providers'] = array_values(array_unique(array_merge(
                 (array) $this->config['providers'],
-                array_filter($this->package->providers, 'class_exists'),
+                array_filter($this->package->providers, static function (string $provider): bool {
+                    try {
+                        return class_exists($provider);
+                    } catch (\Throwable) {
+                        // e.g. a provider extending a class from an uninstalled
+                        // optional dependency — skip it rather than crash.
+                        return false;
+                    }
+                }),
             )));
         }
     }

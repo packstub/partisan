@@ -58,6 +58,7 @@ Partisan needs none for the common case. It honors your `testbench.yaml` (provid
 
 ## Notes
 
+- `make:command SyncInvoices` offers to register the new command in your package's service provider (automatic under `--no-interaction`, opt out with `--no-register`). It inserts into an existing `$this->commands([...])` or spatie-style `->hasCommands([...])` block — adding the import, never duplicating an entry — and appends a fresh `$this->commands([...])` block to `boot()` when the provider has neither.
 - `make:model Invoice --factory` wires the model to its package factory automatically: the `HasFactory` docblock points at your `Database\Factories` namespace and a `#[UseFactory(InvoiceFactory::class)]` attribute is added, so `Invoice::factory()` resolves at runtime with no manual `newFactory()`. If a future Laravel stub ships its own factory wiring, partisan detects it and only corrects the namespace.
 - `make:provider` writes the class into `src/Providers`; registering it in your package's service provider chain is up to you.
 
