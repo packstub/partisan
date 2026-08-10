@@ -12,6 +12,7 @@ use Orchestra\Canvas\Core\PresetManager;
 use Packstub\Partisan\Console\AboutCommand;
 use Packstub\Partisan\Console\ConsoleMakeCommand;
 use Packstub\Partisan\Console\FactoryMakeCommand;
+use Packstub\Partisan\Console\InstallCommand;
 use Packstub\Partisan\Console\ModelMakeCommand;
 use Packstub\Partisan\Console\TestMakeCommand;
 
@@ -35,6 +36,7 @@ class PartisanServiceProvider extends ServiceProvider
 
         $this->commands([
             AboutCommand::class,
+            InstallCommand::class,
         ]);
     }
 }

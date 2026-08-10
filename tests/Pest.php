@@ -26,10 +26,15 @@ pest()->beforeEach(function () {
  */
 function partisan(string ...$args): Process
 {
+    return partisanWithEnv([], ...$args);
+}
+
+function partisanWithEnv(array $env, string ...$args): Process
+{
     $process = new Process(
         command: [PHP_BINARY, PARTISAN_BIN, ...$args, '--no-interaction'],
         cwd: test()->fixture,
-        env: ['TESTBENCH_WORKING_PATH' => false, 'PARTISAN_WORKING_PATH' => false],
+        env: ['TESTBENCH_WORKING_PATH' => false, 'PARTISAN_WORKING_PATH' => false, ...$env],
         timeout: 120,
     );
 

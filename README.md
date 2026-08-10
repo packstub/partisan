@@ -44,7 +44,35 @@ Run `vendor/bin/partisan partisan:about` to see exactly how your package was map
 
 ## A shorter command
 
-`vendor/bin/partisan` is a lot of typing for a tool you reach for constantly. Add a shell alias:
+`vendor/bin/partisan` is a lot of typing for a tool you reach for constantly. The installer sets up either (or both) of the shortcuts below — each step is a prompt you can decline:
+
+```bash
+vendor/bin/partisan partisan:install
+```
+
+In scripts and CI (`--no-interaction`) it only does what you flag explicitly: `--link`, `--alias`.
+
+### `php artisan`, in your package
+
+The installer's first offer is an `artisan` script in your package root — a two-line stub that forwards to `vendor/bin/partisan`:
+
+```php
+#!/usr/bin/env php
+<?php require __DIR__.'/vendor/bin/partisan';
+```
+
+With it, the muscle-memory commands work in your package exactly like in an app:
+
+```bash
+php artisan make:model Invoice
+./artisan make:filament-resource Invoice
+```
+
+A plain PHP file works the same on macOS, Linux, and Windows, and survives archives and checkouts without symlink support — but if you prefer the classic look, a symlink does the job too: `ln -s vendor/bin/partisan artisan`. Commit the script so every contributor gets it, or let the installer add it to `.gitignore` if you'd rather keep it personal.
+
+### A global `pa` shortcut
+
+The second offer is a `pa` shortcut appended to your shell profile (zsh, bash, and fish are detected). To set it up by hand instead, add an alias:
 
 ```bash
 # ~/.zshrc or ~/.bashrc
@@ -57,7 +85,7 @@ Then, from your package root:
 pa make:model Invoice
 ```
 
-If you often work from subdirectories, use a function that finds the nearest `vendor/bin/partisan` upward instead:
+If you often work from subdirectories, use a function that finds the nearest `vendor/bin/partisan` upward instead (this is the variant the installer offers first):
 
 ```bash
 pa() {
