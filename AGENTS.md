@@ -16,3 +16,7 @@ composer test   # Pest suite
 ## Conventions
 
 - PHP 8.3+, Pint, Pest; every change needs a test. Listing copy via the `filament-plugin-listing` skill (workspace root).
+
+## Releasing
+
+- Release = a `## <version>` heading in `CHANGELOG.md`, then a `v<version>` tag on `main`. `.github/workflows/github-release.yml` creates the GitHub release from that changelog section (manual run with a `tag` input for backfills) — no manual release step.
