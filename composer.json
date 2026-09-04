@@ -3,6 +3,12 @@
     "description": "Artisan for Laravel packages — run make: generators from your package directory and get files in src/ with your package namespace. Built on Orchestra Testbench.",
     "keywords": ["laravel", "artisan", "package", "generator", "testbench", "workbench"],
     "license": "MIT",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/icaliman"
+        }
+    ],
     "type": "library",
     "authors": [
         {

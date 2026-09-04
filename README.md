@@ -1,5 +1,10 @@
 # Partisan
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/packstub/partisan.svg?style=flat-square)](https://packagist.org/packages/packstub/partisan)
+[![Total Downloads](https://img.shields.io/packagist/dt/packstub/partisan.svg?style=flat-square)](https://packagist.org/packages/packstub/partisan)
+[![License](https://img.shields.io/packagist/l/packstub/partisan.svg?style=flat-square)](https://github.com/packstub/partisan/blob/main/LICENSE.md)
+[![Sponsor](https://img.shields.io/badge/sponsor-%E2%9D%A4-ea4aaa?style=flat-square&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/icaliman)
+
 **Artisan for Laravel packages.** Run every `make:` generator from your package directory and get files in `src/` with your package's namespace — models, commands, migrations, factories, tests, and full Filament resources included.
 
 Built on [Orchestra Testbench](https://packages.tools/testbench) and [Canvas](https://github.com/orchestral/canvas), the tools that already power Laravel package testing. Partisan adds the missing piece: generators that understand your package is the app.
