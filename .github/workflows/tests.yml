@@ -12,10 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.3', '8.4']
+        php: ['8.3', '8.4', '8.5']
         testbench: ['10', '11']
+        filament: ['4', '5']
 
-    name: PHP ${{ matrix.php }} / Testbench ${{ matrix.testbench }}
+    name: PHP ${{ matrix.php }} / Testbench ${{ matrix.testbench }} / Filament ${{ matrix.filament }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -25,8 +26,10 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
-      - name: Pin Testbench major
-        run: composer require --no-update "orchestra/testbench:^${{ matrix.testbench }}.0" "orchestra/canvas:^${{ matrix.testbench }}.0"
+      - name: Pin Testbench and Filament majors
+        run: |
+          composer require --no-update "orchestra/testbench:^${{ matrix.testbench }}.0" "orchestra/canvas:^${{ matrix.testbench }}.0"
+          composer require --no-update --dev "filament/filament:^${{ matrix.filament }}.0"
 
       - name: Install dependencies
         run: composer update --prefer-dist --no-interaction --no-progress
