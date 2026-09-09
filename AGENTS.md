@@ -11,7 +11,6 @@ composer test   # Pest suite
 ## Layout
 
 - `bin/partisan` entry point, `src/` command resolution and stub rewriting, `tests/`.
-- Used as a path dependency by `../../testing/packstub-tests/demo-plugin`.
 
 ## Conventions
 
