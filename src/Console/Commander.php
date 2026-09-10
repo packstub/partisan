@@ -3,6 +3,7 @@
 namespace Packstub\Partisan\Console;
 
 use Orchestra\Testbench\Console\Commander as TestbenchCommander;
+use Packstub\Partisan\Agent\AgentMode;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Packstub\Partisan\PackageContext;
@@ -44,6 +45,33 @@ class Commander extends TestbenchCommander
                 }),
             )));
         }
+    }
+
+    /**
+     * An agent running partisan with no command wants to know what is here,
+     * not Laravel's 200-line command list: show the package dashboard instead.
+     */
+    public function handle(): void
+    {
+        if (AgentMode::enabled() && ! $this->hasCommandArgument()) {
+            $_SERVER['argv'] = [...($_SERVER['argv'] ?? ['partisan']), 'partisan:about'];
+        }
+
+        parent::handle();
+    }
+
+    protected function hasCommandArgument(): bool
+    {
+        /** @var array<int, string> $argv */
+        $argv = $_SERVER['argv'] ?? [];
+
+        foreach (array_slice($argv, 1) as $argument) {
+            if ($argument !== '' && ! str_starts_with($argument, '-')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

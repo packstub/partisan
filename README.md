@@ -51,13 +51,13 @@ Run `vendor/bin/partisan partisan:about` to see exactly how your package was map
 
 ## A shorter command
 
-`vendor/bin/partisan` is a lot of typing for a tool you reach for constantly. The installer sets up either (or both) of the shortcuts below — each step is a prompt you can decline:
+`vendor/bin/partisan` is a lot of typing for a tool you reach for constantly. The installer sets up the shortcuts below (and, see [AI coding agents](#ai-coding-agents), an `AGENTS.md` section) — each step is a prompt you can decline:
 
 ```bash
 vendor/bin/partisan partisan:install
 ```
 
-In scripts and CI (`--no-interaction`) it only does what you flag explicitly: `--link`, `--alias`.
+In scripts and CI (`--no-interaction`) it only does what you flag explicitly: `--link`, `--alias`, `--agents`.
 
 ### `php artisan`, in your package
 
@@ -115,6 +115,32 @@ $panel->discoverResources(in: app_path('Filament/Resources'), for: 'Acme\\Widget
 ```
 
 Then `make:filament-resource Invoice` produces the resource, pages, schema, and table classes inside `src/Filament/Resources` under your namespace.
+
+## AI coding agents
+
+Partisan notices when an AI coding agent is driving it (Claude Code, Codex, Cursor, Gemini CLI, Copilot and friends, via [laravel/agent-detector](https://github.com/laravel/agent-detector)) and switches to output shaped for a model instead of a terminal, following the [AXI](https://axi.md) principles for agent-ergonomic CLIs:
+
+- **Never prompts, no ANSI.** Every command runs non-interactively; questions take their defaults.
+- **Lists every file it wrote.** A generator ends with the files it created and updated, so the agent never spends a turn on `find` to learn what appeared:
+
+  ```
+  created[6]:
+    - src/Filament/Resources/Invoices/InvoiceResource.php
+    - src/Filament/Resources/Invoices/Pages/CreateInvoice.php
+    - src/Filament/Resources/Invoices/Pages/EditInvoice.php
+    - src/Filament/Resources/Invoices/Pages/ListInvoices.php
+    - src/Filament/Resources/Invoices/Schemas/InvoiceForm.php
+    - src/Filament/Resources/Invoices/Tables/InvoicesTable.php
+  help[1]:
+    Run `php artisan make:filament-resource --help` for this generator's options
+  ```
+
+  A generator that wrote nothing says so (`created[0]: no files written`) instead of leaving the agent to guess.
+- **Content first.** `php artisan` with no command shows the package dashboard — name, namespace, paths, providers, the generators available and the commands to run next — instead of Laravel's 200-line command list.
+
+Set `PARTISAN_AGENT=1` to get the same output in your own terminal, or `PARTISAN_AGENT=0` to opt out.
+
+The other half is making sure the agent reaches for the generator at all. `partisan:install --agents` appends a short "Artisan generators" section to your package's `AGENTS.md` (or `CLAUDE.md` when that is the only instructions file) telling agents that `php artisan make:…` works here and to run it before writing scaffolding by hand. Pair it with [laravel/pao](https://github.com/laravel/pao) for agent-optimized Pest and PHPStan output and the whole package loop stays cheap to read.
 
 ## Configuration
 
