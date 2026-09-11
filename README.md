@@ -1,6 +1,6 @@
 # Partisan
 
-![Partisan — Artisan for Laravel packages](https://raw.githubusercontent.com/packstub/partisan/main/art/banner.jpg)
+![Partisan — Artisan for Laravel packages](https://raw.githubusercontent.com/packstub/art/main/partisan/banner.jpg)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/packstub/partisan.svg?style=flat-square)](https://packagist.org/packages/packstub/partisan)
 [![Total Downloads](https://img.shields.io/packagist/dt/packstub/partisan.svg?style=flat-square)](https://packagist.org/packages/packstub/partisan)
