@@ -2,6 +2,7 @@
 
 namespace Packstub\Partisan\Console;
 
+use Filament\Facades\Filament;
 use Illuminate\Console\Command;
 use Packstub\Partisan\Console\Concerns\InteractsWithPackage;
 
@@ -207,11 +208,76 @@ class InstallCommand extends Command
 
     protected function agentsSection(string $artisan): string
     {
+        $package = $this->package();
+        $namespace = rtrim($package->namespace, '\\').'\\';
+        $prefix = $this->commandPrefix();
+        $panel = $this->filamentPanel();
+
+        $recipes = [
+            \sprintf('- Model: `%s make:model Invoice --migration --factory --policy` writes `src/Models/Invoice.php`, the `create_invoices_table` migration, `database/factories/InvoiceFactory.php` (wired to the model) and `src/Policies/InvoicePolicy.php`; then fill in fillable/casts, the columns, the factory definition and the policy methods.', $artisan),
+            \sprintf('- Command: `%s make:command PruneInvoices --command=%s:prune-invoices` writes `src/Console/PruneInvoices.php` and registers it in the service provider; pass the class name only, no directory; then set the description and `handle()`.', $artisan, $prefix),
+        ];
+
+        if ($this->hasGenerator('make:filament-resource')) {
+            $recipes[] = \sprintf('- Filament resource: `%s make:filament-resource Invoice --generate%s` writes the resource, its List/Create/Edit pages, `Schemas/InvoiceForm.php` and `Tables/InvoicesTable.php` with the form and table filled from the package\'s migrations; edit only the form and table classes, the resource and pages are final.', $artisan, $panel === null ? '' : ' --panel='.$panel);
+        }
+
+        $recipes = implode("\n", $recipes);
+
         return <<<MD
             ## Artisan generators
 
-            [Partisan](https://github.com/packstub/partisan) is installed, so `{$artisan} make:…` works from the package root exactly like in a Laravel app and writes into `src/` with the package namespace: models, commands, migrations, factories, seeders, tests, Filament resources and the rest of the `make:` family. Run the generator first and edit the files it lists; do not write scaffolding by hand. `{$artisan} make:filament-resource <Model> --generate` fills the form and table from the package's migrations. Generated files are already formatted with the package's Pint; do not reformat them. After a change, `{$artisan} partisan:check` verifies providers, commands, routes, Filament resources, migrations, Pint and autoload in one run. `{$artisan}` alone shows the package mapping and the available generators.
+            [Partisan](https://github.com/packstub/partisan) is installed, so `{$artisan} make:…` works from the package root exactly like in a Laravel app and writes into `src/` with the `{$namespace}` namespace: models, commands, migrations, factories, seeders, tests, Filament resources and the rest of the `make:` family. Run the generator first, then edit the files it lists; do not write scaffolding by hand.
+
+            Recipes:
+
+            {$recipes}
+
+            Generated files are already formatted with the package's Pint; do not reformat them. A generated command is already registered; do not register it again. `{$artisan} make:<name> --help` lists a generator's options. After a change, `{$artisan} partisan:check` verifies providers, commands, routes, Filament resources, migrations, Pint and autoload in one run. `{$artisan}` alone shows the package mapping and the available generators.
             MD;
+    }
+
+    protected function hasGenerator(string $name): bool
+    {
+        return $this->getApplication()?->has($name) ?? false;
+    }
+
+    /**
+     * The `prefix:` the package's commands use, or its name when it has none yet.
+     */
+    protected function commandPrefix(): string
+    {
+        $package = $this->package();
+
+        foreach ($this->getApplication()?->all() ?? [] as $name => $command) {
+            if (str_starts_with($command::class, rtrim($package->namespace, '\\').'\\') && str_contains((string) $name, ':')) {
+                return strstr((string) $name, ':', true) ?: $name;
+            }
+        }
+
+        $name = $package->name !== '' ? $package->name : basename($package->rootPath);
+
+        return str_contains($name, '/') ? substr($name, strrpos($name, '/') + 1) : $name;
+    }
+
+    /**
+     * The id of the package's first Filament panel, if it registers one.
+     */
+    protected function filamentPanel(): ?string
+    {
+        if (! class_exists(Filament::class)) {
+            return null;
+        }
+
+        try {
+            foreach (Filament::getPanels() as $panel) {
+                return $panel->getId();
+            }
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return null;
     }
 
     /**

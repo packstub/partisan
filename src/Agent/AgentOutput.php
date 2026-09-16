@@ -28,7 +28,9 @@ final class AgentOutput
 
     public function finished(CommandFinished $event): void
     {
-        if ($this->snapshot === null) {
+        if ($this->snapshot === null || $event->input->hasParameterOption(['--help', '-h'], true)) {
+            $this->snapshot = null;
+
             return;
         }
 
@@ -44,7 +46,7 @@ final class AgentOutput
         $this->writeList($event->output, 'created', $changes['created'], $generator ? 'no files written' : null);
         $this->writeList($event->output, 'updated', $changes['updated']);
 
-        if ($generator) {
+        if ($generator && $event->exitCode === 0) {
             $event->output->writeln('help[1]:');
             $event->output->writeln(\sprintf('  Run `%s %s --help` for this generator\'s options', $this->package->artisan(), $event->command));
         }
