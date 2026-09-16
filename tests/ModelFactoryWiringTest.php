@@ -5,13 +5,14 @@ it('wires generated models to their package factory', function () {
 
     $model = assertGenerated('src/Models/Order.php', [
         'namespace Acme\Widget\Models;',
-        '/** @use HasFactory<\Acme\Widget\Database\Factories\OrderFactory> */',
+        '/** @use HasFactory<OrderFactory> */',
         'use Illuminate\Database\Eloquent\Attributes\UseFactory;',
         'use Acme\Widget\Database\Factories\OrderFactory;',
         '#[UseFactory(OrderFactory::class)]',
     ]);
 
-    // The app-convention reference must be gone and the attribute added once.
+    // The app-convention reference must be gone (Pint shortens the docblock
+    // to the imported class) and the attribute added once.
     expect($model)->not->toContain('<\Database\Factories\\')
         ->and(substr_count($model, '#[UseFactory'))->toBe(1);
 
