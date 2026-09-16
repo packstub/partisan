@@ -210,7 +210,7 @@ class InstallCommand extends Command
         return <<<MD
             ## Artisan generators
 
-            [Partisan](https://github.com/packstub/partisan) is installed, so `{$artisan} make:…` works from the package root exactly like in a Laravel app and writes into `src/` with the package namespace: models, commands, migrations, factories, seeders, tests, Filament resources and the rest of the `make:` family. Run the generator first and edit the files it lists; do not write scaffolding by hand. `{$artisan}` alone shows the package mapping and the available generators.
+            [Partisan](https://github.com/packstub/partisan) is installed, so `{$artisan} make:…` works from the package root exactly like in a Laravel app and writes into `src/` with the package namespace: models, commands, migrations, factories, seeders, tests, Filament resources and the rest of the `make:` family. Run the generator first and edit the files it lists; do not write scaffolding by hand. `{$artisan} make:filament-resource <Model> --generate` fills the form and table from the package's migrations. `{$artisan}` alone shows the package mapping and the available generators.
             MD;
     }
 
