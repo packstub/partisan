@@ -47,7 +47,16 @@ it('appends the pa function to the shell profile with --alias', function () {
 it('adds an Artisan generators section to AGENTS.md with --agents', function () {
     $process = partisanExpectingSuccess('partisan:install', '--agents');
 
-    $content = assertGenerated('AGENTS.md', ['## Artisan generators', '`vendor/bin/partisan make:…`', 'do not write scaffolding by hand']);
+    $content = assertGenerated('AGENTS.md', [
+        '## Artisan generators',
+        '`vendor/bin/partisan make:…`',
+        'do not write scaffolding by hand',
+        'the `Acme\\Widget\\` namespace',
+        '`vendor/bin/partisan make:model Invoice --migration --factory --policy`',
+        '`vendor/bin/partisan make:command PruneInvoices --command=widget:prune-invoices`',
+        '`vendor/bin/partisan make:filament-resource Invoice --generate --panel=admin`',
+        '`vendor/bin/partisan partisan:check`',
+    ]);
 
     expect($content)->toStartWith('# Agent instructions')
         ->and($process->getOutput())->toContain('AGENTS.md');

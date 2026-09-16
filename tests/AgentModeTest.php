@@ -75,3 +75,35 @@ it('stays quiet for people', function () {
 
     expect($process->getOutput())->not->toContain('created[');
 });
+
+it('prints only the generator\'s own arguments and options for --help', function () {
+    $process = partisanWithEnv(['PARTISAN_AGENT' => '1'], 'make:model', '--help');
+
+    expect($process->getExitCode())->toBe(0, $process->getOutput().$process->getErrorOutput())
+        ->and($process->getOutput())
+        ->toContain("make:model — Create a new Eloquent model class\n")
+        ->toContain("usage: vendor/bin/partisan make:model <name> [options]\n")
+        ->toContain("arguments[1]:\n  name  The name of the model")
+        ->toContain('-m, --migration')
+        ->not->toContain('--env')
+        ->not->toContain('--ansi')
+        ->not->toContain('created[0]');
+});
+
+it('keeps the full help for people', function () {
+    $process = partisanExpectingSuccess('make:model', '--help');
+
+    expect($process->getOutput())->toContain('--env')->not->toContain('usage: vendor/bin/partisan');
+});
+
+it('follows an input error with the generator usage so the retry needs no --help', function () {
+    $process = partisanWithEnv(['PARTISAN_AGENT' => '1'], 'make:model', 'Invoice', '--model=Foo');
+    $output = $process->getOutput().$process->getErrorOutput();
+
+    expect($process->getExitCode())->toBe(1)
+        ->and($output)
+        ->toContain('The "--model" option does not exist.')
+        ->toContain('usage: vendor/bin/partisan make:model <name> [options]')
+        ->toContain('-m, --migration')
+        ->not->toContain('Run `vendor/bin/partisan make:model --help`');
+});

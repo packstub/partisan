@@ -4,6 +4,7 @@ namespace Packstub\Partisan;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -12,8 +13,11 @@ use Orchestra\Canvas\Console\FactoryMakeCommand as CanvasFactoryMakeCommand;
 use Orchestra\Canvas\Console\ModelMakeCommand as CanvasModelMakeCommand;
 use Orchestra\Canvas\Console\TestMakeCommand as CanvasTestMakeCommand;
 use Orchestra\Canvas\Core\PresetManager;
+use Packstub\Partisan\Agent\AgentExceptionHandler;
 use Packstub\Partisan\Agent\AgentMode;
 use Packstub\Partisan\Agent\AgentOutput;
+use Packstub\Partisan\Agent\CompactHelp;
+use Packstub\Partisan\Agent\HelpCommand;
 use Packstub\Partisan\Console\AboutCommand;
 use Packstub\Partisan\Console\CheckCommand;
 use Packstub\Partisan\Console\ConsoleMakeCommand;
@@ -77,5 +81,11 @@ class PartisanServiceProvider extends ServiceProvider
 
         $events->listen(CommandStarting::class, fn (CommandStarting $event) => $this->app->make(AgentOutput::class)->starting($event));
         $events->listen(CommandFinished::class, fn (CommandFinished $event) => $this->app->make(AgentOutput::class)->finished($event));
+
+        // `make:model --help` shows the generator's own options only, and an
+        // input error is followed by that same usage (see Agent\CompactHelp).
+        $this->app->singleton(CompactHelp::class);
+        $this->commands([HelpCommand::class]);
+        $this->app->extend(ExceptionHandler::class, fn (ExceptionHandler $handler) => new AgentExceptionHandler($handler, $this->app, $this->app->make(CompactHelp::class)));
     }
 }
