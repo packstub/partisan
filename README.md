@@ -120,6 +120,16 @@ Then `make:filament-resource Invoice` produces the resource, pages, schema, and 
 
 Add `--generate` and the form and table come out populated from your model's columns, exactly as in an app. A package has no database for Filament to read, so partisan applies the package's migrations (`database/migrations`, `workbench/database/migrations`, and any path a provider or `testbench.yaml` registers) to an in-memory SQLite connection first; nothing is written to disk and no `.env` is needed.
 
+## Checking the package
+
+After a change, one command answers "does it still boot and is the new thing wired?":
+
+```bash
+vendor/bin/partisan partisan:check
+```
+
+It boots the package and reports, one line each: the providers declared in `composer.json` are registered; the commands and routes the package contributes; Filament panels with their resource and page counts; the package's migrations applied to an in-memory SQLite; `pint --test` on `src/` and `database/` when Pint is installed; and whether every class under the package's autoload paths (plus `database/factories` and `database/seeders`) can actually be loaded, which catches a factories directory nobody mapped in `autoload-dev`. The exit code is 1 when anything fails, so it works as a CI step too.
+
 ## AI coding agents
 
 Partisan notices when an AI coding agent is driving it (Claude Code, Codex, Cursor, Gemini CLI, Copilot and friends, via [laravel/agent-detector](https://github.com/laravel/agent-detector)) and switches to output shaped for a model instead of a terminal, following the [AXI](https://axi.md) principles for agent-ergonomic CLIs:

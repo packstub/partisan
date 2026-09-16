@@ -52,7 +52,8 @@ it('shows the package dashboard instead of the command list when run without a c
         ->toContain('providers[2]: Acme\Widget\Providers\AdminPanelProvider, Acme\Widget\WidgetServiceProvider')
         ->toContain('artisan: vendor/bin/partisan')
         ->toMatch('/generators\[\d+\]: .*make:filament-resource.*make:model/')
-        ->toContain('help[3]:')
+        ->toContain('help[4]:')
+        ->toContain('partisan:check')
         ->not->toContain('Available commands');
 });
 
