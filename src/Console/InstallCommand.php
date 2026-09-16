@@ -15,17 +15,19 @@ class InstallCommand extends Command
 
     protected $signature = 'partisan:install
         {--link : Create the artisan entry script without asking}
-        {--alias : Add the pa shortcut to your shell profile without asking}';
+        {--alias : Add the pa shortcut to your shell profile without asking}
+        {--agents : Add an Artisan generators section to AGENTS.md for AI coding agents without asking}';
 
-    protected $description = 'Set up the optional artisan entry script and pa shell shortcut';
+    protected $description = 'Set up the optional artisan entry script, pa shell shortcut and AGENTS.md section';
 
     public function handle(): int
     {
         $this->installArtisanScript();
         $this->installShellShortcut();
+        $this->installAgentsSection();
 
-        if (! $this->input->isInteractive() && ! $this->option('link') && ! $this->option('alias')) {
-            $this->components->info('Running non-interactively — pass --link and/or --alias to choose what to set up.');
+        if (! $this->input->isInteractive() && ! $this->option('link') && ! $this->option('alias') && ! $this->option('agents')) {
+            $this->components->info('Running non-interactively — pass --link, --alias and/or --agents to choose what to set up.');
         }
 
         return self::SUCCESS;
@@ -157,6 +159,59 @@ class InstallCommand extends Command
         );
 
         $this->components->info("pa shortcut added to {$profile} — restart your shell or `source {$profile}` to use it.");
+    }
+
+    /**
+     * AI coding agents learn what a repo offers from AGENTS.md; a short
+     * section there is what makes them reach for the generator instead of
+     * writing scaffolding by hand.
+     */
+    protected function installAgentsSection(): void
+    {
+        $root = $this->package()->rootPath;
+        $target = $this->agentsFile($root);
+        $existing = is_file($target) ? (string) file_get_contents($target) : '';
+
+        if (stripos($existing, 'partisan') !== false) {
+            $this->components->twoColumnDetail('AGENTS.md section', basename($target).' already mentions partisan — skipped');
+
+            return;
+        }
+
+        $wanted = $this->option('agents') || (
+            $this->input->isInteractive()
+            && confirm('Tell AI coding agents that `php artisan make:…` works here? (adds a short section to '.basename($target).')')
+        );
+
+        if (! $wanted) {
+            return;
+        }
+
+        $section = $this->agentsSection($this->package()->artisan());
+
+        file_put_contents($target, ($existing === '' ? "# Agent instructions\n\n" : rtrim($existing)."\n\n").$section."\n");
+
+        $this->components->info('Artisan generators section added to '.basename($target).'.');
+    }
+
+    protected function agentsFile(string $root): string
+    {
+        foreach (['AGENTS.md', 'CLAUDE.md'] as $candidate) {
+            if (is_file($root.'/'.$candidate)) {
+                return $root.'/'.$candidate;
+            }
+        }
+
+        return $root.'/AGENTS.md';
+    }
+
+    protected function agentsSection(string $artisan): string
+    {
+        return <<<MD
+            ## Artisan generators
+
+            [Partisan](https://github.com/packstub/partisan) is installed, so `{$artisan} make:…` works from the package root exactly like in a Laravel app and writes into `src/` with the package namespace: models, commands, migrations, factories, seeders, tests, Filament resources and the rest of the `make:` family. Run the generator first and edit the files it lists; do not write scaffolding by hand. `{$artisan}` alone shows the package mapping and the available generators.
+            MD;
     }
 
     /**

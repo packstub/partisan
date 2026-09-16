@@ -2,6 +2,9 @@
 
 namespace Packstub\Partisan;
 
+use Illuminate\Console\Events\CommandFinished;
+use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Console\ConsoleMakeCommand as CanvasConsoleMakeCommand;
@@ -9,6 +12,8 @@ use Orchestra\Canvas\Console\FactoryMakeCommand as CanvasFactoryMakeCommand;
 use Orchestra\Canvas\Console\ModelMakeCommand as CanvasModelMakeCommand;
 use Orchestra\Canvas\Console\TestMakeCommand as CanvasTestMakeCommand;
 use Orchestra\Canvas\Core\PresetManager;
+use Packstub\Partisan\Agent\AgentMode;
+use Packstub\Partisan\Agent\AgentOutput;
 use Packstub\Partisan\Console\AboutCommand;
 use Packstub\Partisan\Console\ConsoleMakeCommand;
 use Packstub\Partisan\Console\FactoryMakeCommand;
@@ -38,5 +43,20 @@ class PartisanServiceProvider extends ServiceProvider
             AboutCommand::class,
             InstallCommand::class,
         ]);
+    }
+
+    public function boot(): void
+    {
+        if (! AgentMode::enabled()) {
+            return;
+        }
+
+        // Driven by an AI coding agent: never prompt, drop ANSI, and report
+        // the files each command wrote (see Agent\AgentOutput).
+        $this->app->singleton(AgentOutput::class);
+
+        $events = $this->app->make(Dispatcher::class);
+        $events->listen(CommandStarting::class, fn (CommandStarting $event) => $this->app->make(AgentOutput::class)->starting($event));
+        $events->listen(CommandFinished::class, fn (CommandFinished $event) => $this->app->make(AgentOutput::class)->finished($event));
     }
 }

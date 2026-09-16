@@ -25,6 +25,7 @@ final class PackageContext
         public readonly string $testsPath,
         public readonly array $providers = [],
         public readonly array $autoload = [],
+        public readonly string $name = '',
     ) {}
 
     public static function fromComposer(string $workingPath): self
@@ -70,7 +71,17 @@ final class PackageContext
             testsPath: $rootPath.DIRECTORY_SEPARATOR.trim($testsPath, '/'),
             providers: (array) ($composer['extra']['laravel']['providers'] ?? []),
             autoload: $autoload,
+            name: (string) ($composer['name'] ?? ''),
         );
+    }
+
+    /**
+     * How partisan is invoked in this package: `php artisan` once the entry
+     * script from partisan:install exists, `vendor/bin/partisan` otherwise.
+     */
+    public function artisan(): string
+    {
+        return is_file($this->rootPath.DIRECTORY_SEPARATOR.'artisan') ? 'php artisan' : 'vendor/bin/partisan';
     }
 
     /**

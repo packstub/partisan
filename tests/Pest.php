@@ -34,7 +34,9 @@ function partisanWithEnv(array $env, string ...$args): Process
     $process = new Process(
         command: [PHP_BINARY, PARTISAN_BIN, ...$args, '--no-interaction'],
         cwd: test()->fixture,
-        env: ['TESTBENCH_WORKING_PATH' => false, 'PARTISAN_WORKING_PATH' => false, ...$env],
+        // Agent mode is off unless a test turns it on, even when the suite
+        // itself runs under an AI coding agent.
+        env: ['TESTBENCH_WORKING_PATH' => false, 'PARTISAN_WORKING_PATH' => false, 'PARTISAN_AGENT' => '0', ...$env],
         timeout: 120,
     );
 
