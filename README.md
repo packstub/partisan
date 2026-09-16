@@ -47,6 +47,8 @@ Testbench boots a skeleton Laravel application around your package; Canvas route
 
 The `workbench` and `laravel` presets stay available per command (`make:model Demo --preset=workbench`) when you want to generate into your Workbench demo app instead.
 
+Generated files match your package, not just its namespace: when `laravel/pint` is installed, every file a generator creates or updates is run through it with your `pint.json` before you see it, so a `declare_strict_types` rule, import order or docblock class names come out the way your CI expects. Set `PARTISAN_PINT=0` to skip that.
+
 Run `vendor/bin/partisan partisan:about` to see exactly how your package was mapped.
 
 ## A shorter command

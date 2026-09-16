@@ -21,6 +21,7 @@ use Packstub\Partisan\Console\InstallCommand;
 use Packstub\Partisan\Console\ModelMakeCommand;
 use Packstub\Partisan\Console\TestMakeCommand;
 use Packstub\Partisan\Database\MigratesForGenerators;
+use Packstub\Partisan\Formatting\FormatsGeneratedFiles;
 
 class PartisanServiceProvider extends ServiceProvider
 {
@@ -56,6 +57,13 @@ class PartisanServiceProvider extends ServiceProvider
             $this->app,
             $this->app->make(PackageContext::class),
         ))->starting($event));
+
+        // Generated and updated files go through the package's own Pint, so
+        // stubs match the package style before anyone reads them. Registered
+        // before the agent-mode report so the report describes formatted files.
+        $this->app->singleton(FormatsGeneratedFiles::class);
+        $events->listen(CommandStarting::class, fn (CommandStarting $event) => $this->app->make(FormatsGeneratedFiles::class)->starting($event));
+        $events->listen(CommandFinished::class, fn (CommandFinished $event) => $this->app->make(FormatsGeneratedFiles::class)->finished($event));
 
         if (! AgentMode::enabled()) {
             return;
