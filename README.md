@@ -116,6 +116,8 @@ $panel->discoverResources(in: app_path('Filament/Resources'), for: 'Acme\\Widget
 
 Then `make:filament-resource Invoice` produces the resource, pages, schema, and table classes inside `src/Filament/Resources` under your namespace.
 
+Add `--generate` and the form and table come out populated from your model's columns, exactly as in an app. A package has no database for Filament to read, so partisan applies the package's migrations (`database/migrations`, `workbench/database/migrations`, and any path a provider or `testbench.yaml` registers) to an in-memory SQLite connection first; nothing is written to disk and no `.env` is needed.
+
 ## AI coding agents
 
 Partisan notices when an AI coding agent is driving it (Claude Code, Codex, Cursor, Gemini CLI, Copilot and friends, via [laravel/agent-detector](https://github.com/laravel/agent-detector)) and switches to output shaped for a model instead of a terminal, following the [AXI](https://axi.md) principles for agent-ergonomic CLIs:

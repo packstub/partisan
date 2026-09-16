@@ -20,6 +20,7 @@ use Packstub\Partisan\Console\FactoryMakeCommand;
 use Packstub\Partisan\Console\InstallCommand;
 use Packstub\Partisan\Console\ModelMakeCommand;
 use Packstub\Partisan\Console\TestMakeCommand;
+use Packstub\Partisan\Database\MigratesForGenerators;
 
 class PartisanServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,15 @@ class PartisanServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $events = $this->app->make(Dispatcher::class);
+
+        // A Filament generator run with --generate reads the model's table:
+        // give it one by migrating the package into an in-memory SQLite.
+        $events->listen(CommandStarting::class, fn (CommandStarting $event) => (new MigratesForGenerators(
+            $this->app,
+            $this->app->make(PackageContext::class),
+        ))->starting($event));
+
         if (! AgentMode::enabled()) {
             return;
         }
@@ -55,7 +65,6 @@ class PartisanServiceProvider extends ServiceProvider
         // the files each command wrote (see Agent\AgentOutput).
         $this->app->singleton(AgentOutput::class);
 
-        $events = $this->app->make(Dispatcher::class);
         $events->listen(CommandStarting::class, fn (CommandStarting $event) => $this->app->make(AgentOutput::class)->starting($event));
         $events->listen(CommandFinished::class, fn (CommandFinished $event) => $this->app->make(AgentOutput::class)->finished($event));
     }
