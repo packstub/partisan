@@ -62,10 +62,11 @@ class AboutCommand extends Command
         $this->line(\sprintf('providers[%d]: %s', count($package->providers), implode(', ', $package->providers)));
         $this->line('artisan: '.$artisan);
         $this->line(\sprintf('generators[%d]: %s', count($generators), implode(', ', $generators)));
-        $this->line('help[3]:');
+        $this->line('help[4]:');
         $this->line(\sprintf('  Run `%s make:<type> <Name>` to generate; the output lists every file written', $artisan));
         $this->line(\sprintf('  Run `%s make:model Invoice --migration --factory --policy` to scaffold companions in one call', $artisan));
         $this->line(\sprintf('  Run `%s make:<type> --help` for a generator\'s options', $artisan));
+        $this->line(\sprintf('  Run `%s partisan:check` to verify providers, commands, routes, resources, migrations, Pint and autoload in one go', $artisan));
     }
 
     protected function tilde(string $path): string
