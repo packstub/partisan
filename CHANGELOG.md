@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-09-16
 
 - `partisan:check` (#10) boots the package and reports, one pass/fail line each, the providers from `composer.json`, the commands and routes the package registers, Filament panels with their resource and page counts, the migrations applied to an in-memory SQLite, `pint --test` on `src/` and `database/`, and whether every class under the package paths (plus `database/factories` and `database/seeders`) is autoloadable. Exit code 1 when anything fails; agent mode prints `help[n]` lines with the fix for each failure.
 - Files a generator creates or updates are formatted with the package's own Pint (`vendor/bin/pint`, with the package's `pint.json`) before they are reported (#9), so a `declare_strict_types` rule, import order and docblock class names match the package from the start. Silent when Pint is not installed; `PARTISAN_PINT=0` opts out.
