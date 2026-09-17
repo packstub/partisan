@@ -156,6 +156,19 @@ Set `PARTISAN_AGENT=1` to get the same output in your own terminal, or `PARTISAN
 
 The other half is making sure the agent reaches for the generator at all. `partisan:install --agents` appends a short "Artisan generators" section to your package's `AGENTS.md` (or `CLAUDE.md` when that is the only instructions file) telling agents that `php artisan make:…` works here and to run it before writing scaffolding by hand. Pair it with [laravel/pao](https://github.com/laravel/pao) for agent-optimized Pest and PHPStan output and the whole package loop stays cheap to read.
 
+### What it saves
+
+We measure this with Claude Code driving a real Filament plugin: the same bare task prompt, once with nothing but the package and once with Partisan installed, agent mode on and the `AGENTS.md` section in place. Nothing in the prompt says how to do the job. Claude Fable 5.1, Partisan 0.4.0, five runs per task, every run verified afterwards (Pint clean, the resource discovered by the panel, the command registered). Medians, measured 2026-09-16:
+
+| Task | Written by hand | Partisan, agent mode |
+| --- | --- | --- |
+| Filament resource with form and table, 6 files | 18 turns · 6.3k output tokens · $0.85 | 10 turns · 2.4k output tokens · $0.30 |
+| Model, migration, factory and policy | 12 turns · 5.2k · $0.62 | 12 turns · 2.9k · $0.39 |
+| Console command, registered in the provider | 12 turns · 2.3k · $0.36 | 8 turns · 1.6k · $0.37 |
+| All 15 runs, mean | 14.9 turns · $0.58 | 10.9 turns · $0.38 |
+
+The Filament resource is where the generator pays for itself outright: every agent-mode run was one `make:filament-resource Fly --generate --panel=demo`, three one-line edits to the schema and table, and `partisan:check`, four of the five runs within three cents of each other. On the smaller scaffolds the agent edits a generated file instead of writing it from memory, so it spends about half the output tokens for the same number of turns. Method, per-run tables and what the transcripts show are in the [benchmark write-up](https://packstub.dev/docs/partisan/ai-coding-agents).
+
 ## Configuration
 
 Partisan needs none for the common case. It honors your `testbench.yaml` (providers, custom skeleton, migrations, seeders) exactly like the Testbench CLI. Set `PARTISAN_DISCOVER=0` to skip auto-registering the providers from `extra.laravel.providers`.

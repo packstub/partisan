@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- README: the AI coding agents section reports the Claude Code benchmark (Partisan 0.4.0, Claude Fable 5.1, five runs per task): a Filament resource in 10 turns / $0.30 with agent mode against 18 / $0.85 by hand, with a link to the write-up on packstub.dev.
+
 ## 0.4.0 — 2026-09-16
 
 - The AGENTS.md section from `partisan:install --agents` carries recipes, not just a pointer: the exact `make:model`, `make:command --command=<prefix>:…` and `make:filament-resource --generate --panel=<id>` invocations with the files each one writes and which of them to edit, tailored to the package (namespace, command prefix, first Filament panel, Filament recipe only when the generator exists).
