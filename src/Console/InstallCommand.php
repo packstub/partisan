@@ -214,7 +214,7 @@ class InstallCommand extends Command
         $panel = $this->filamentPanel();
 
         $recipes = [
-            \sprintf('- Model: `%s make:model Invoice --migration --factory --policy` writes `src/Models/Invoice.php`, the `create_invoices_table` migration, `database/factories/InvoiceFactory.php` (wired to the model) and `src/Policies/InvoicePolicy.php`; then fill in fillable/casts, the columns, the factory definition and the policy methods.', $artisan),
+            \sprintf('- Model: `%s make:model Invoice --fields=number:string:unique,total:decimal(10,2)=0,is_paid:boolean=false,notes:text:nullable,user_id:foreignId --migration --factory --policy` writes `src/Models/Invoice.php` with `$fillable`, `casts()` and a `belongsTo` per foreign key, the `create_invoices_table` migration with the columns, `database/factories/InvoiceFactory.php` with a `definition()` (wired to the model) and `src/Policies/InvoicePolicy.php`; the model, migration and factory are final, then write the policy methods. Field syntax: `name:type[(args)][:modifier][=default]` with Blueprint types, `nullable`/`unique`/`index` modifiers, `foreignIdFor(Model)` to name a related model, `commentable:morphs` for a morph.', $artisan),
             \sprintf('- Command: `%s make:command PruneInvoices --command=%s:prune-invoices` writes `src/Console/PruneInvoices.php` and registers it in the service provider; pass the class name only, no directory; then set the description and `handle()`.', $artisan, $prefix),
         ];
 
