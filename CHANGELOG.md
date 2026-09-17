@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- README: the model row of the Claude Code benchmark remeasured on 0.5.0 with `--fields`: 12 turns / 2.7k output tokens / $0.33 in agent mode against 12 / 5.2k / $0.62 by hand ($0.39 on 0.4.0); the model and migration are never edited, the agent-mode mean over the 15 runs is 10.4 turns / $0.36.
+
 ## 0.5.0 — 2026-09-17
 
 - README: the AI coding agents section reports the Claude Code benchmark (Partisan 0.4.0, Claude Fable 5.1, five runs per task): a Filament resource in 10 turns / $0.30 with agent mode against 18 / $0.85 by hand, with a link to the write-up on packstub.dev.
