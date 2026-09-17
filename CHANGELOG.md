@@ -3,6 +3,7 @@
 ## Unreleased
 
 - README: the AI coding agents section reports the Claude Code benchmark (Partisan 0.4.0, Claude Fable 5.1, five runs per task): a Filament resource in 10 turns / $0.30 with agent mode against 18 / $0.85 by hand, with a link to the write-up on packstub.dev.
+- `--fields` on `make:model`, `make:migration` and `make:factory` (#19): `name:type[(args)][:modifier][=default]` with Blueprint column types writes `$fillable` and `casts()` on the model, the column lines in the migration and a `definition()` in the factory, so the three files agree without an edit. Foreign keys (`user_id:foreignId`, `author_id:foreignIdFor(User)`) and morphs (`commentable:morphs`) add the constrained column, a `belongsTo` / `morphTo` method and a related factory; `User` with no package class resolves through `config('auth.providers.users.model')`, unresolved package classes are reported (`unresolved[n]` in agent mode). The AGENTS.md recipe for `make:model` carries the spec.
 
 ## 0.4.0 — 2026-09-16
 

@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Console\ConsoleMakeCommand as CanvasConsoleMakeCommand;
 use Orchestra\Canvas\Console\FactoryMakeCommand as CanvasFactoryMakeCommand;
+use Orchestra\Canvas\Console\MigrateMakeCommand as CanvasMigrateMakeCommand;
 use Orchestra\Canvas\Console\ModelMakeCommand as CanvasModelMakeCommand;
 use Orchestra\Canvas\Console\TestMakeCommand as CanvasTestMakeCommand;
 use Orchestra\Canvas\Core\PresetManager;
@@ -23,6 +24,7 @@ use Packstub\Partisan\Console\CheckCommand;
 use Packstub\Partisan\Console\ConsoleMakeCommand;
 use Packstub\Partisan\Console\FactoryMakeCommand;
 use Packstub\Partisan\Console\InstallCommand;
+use Packstub\Partisan\Console\MigrateMakeCommand;
 use Packstub\Partisan\Console\ModelMakeCommand;
 use Packstub\Partisan\Console\TestMakeCommand;
 use Packstub\Partisan\Database\MigratesForGenerators;
@@ -43,6 +45,7 @@ class PartisanServiceProvider extends ServiceProvider
 
         $this->app->extend(CanvasConsoleMakeCommand::class, static fn ($command, $app) => new ConsoleMakeCommand($app['files']));
         $this->app->extend(CanvasFactoryMakeCommand::class, static fn ($command, $app) => new FactoryMakeCommand($app['files']));
+        $this->app->extend(CanvasMigrateMakeCommand::class, static fn ($command, $app) => new MigrateMakeCommand($app['migration.creator'], $app['composer']));
         $this->app->extend(CanvasModelMakeCommand::class, static fn ($command, $app) => new ModelMakeCommand($app['files']));
         $this->app->extend(CanvasTestMakeCommand::class, static fn ($command, $app) => new TestMakeCommand($app['files']));
 

@@ -36,6 +36,21 @@ Partisan reads your package's `composer.json` and points the whole generator sui
 
 Because partisan wraps the Testbench CLI, everything Testbench can do still works — `vendor/bin/partisan serve`, `migrate`, `route:list`, your package's own commands, `workbench:install`, all of it.
 
+### Describe the columns once
+
+`make:model`, `make:migration` and `make:factory` take a `--fields` spec, so the model, its migration and its factory come out matching each other instead of as empty stubs:
+
+```bash
+vendor/bin/partisan make:model Invoice --migration --factory \
+  --fields='number:string:unique,total:decimal(10,2)=0,is_paid:boolean=false,status:enum(draft,sent)=draft,notes:text:nullable,user_id:foreignId'
+```
+
+That writes `$fillable` and a `casts()` method on the model (`total` as `decimal:2`, `is_paid` as `boolean`), one column line per field in the migration (`$table->decimal('total', 10, 2)->default(0)`, `$table->foreignId('user_id')->constrained()`), and a `definition()` in the factory with a fake per type, `fake()->unique()` for unique columns and a fake picked by name for `email`, `name`, `title`, `slug`, `url` and `phone`.
+
+The syntax is `name:type[(args)][:modifier…][=default]`, comma-separated. Types are Blueprint column methods and parentheses keep their Blueprint meaning (`string(100)`, `decimal(8,2)`, `enum(a,b)`); modifiers are `nullable`, `unique`, `index`, `unsigned`, `primary`, `fullText`; `=` sets the default.
+
+Foreign keys write the relation too: `user_id:foreignId` adds a constrained column, a `user(): BelongsTo` method and a related factory in `definition()`; `author_id:foreignIdFor(User)` names the model when the column does not; `commentable:morphs` adds the two columns and a `commentable(): MorphTo`. On foreign keys the modifiers `cascadeOnDelete`, `nullOnDelete`, `restrictOnDelete` and `unconstrained` apply. The related class is looked up in your package's model namespace; `User` with no such class is treated as the host application's user and resolved through `config('auth.providers.users.model')`, a backslashed name (`foreignIdFor(App\Models\Team)`) is taken as is, and anything else is written in the package namespace and reported so you can point it at the host model or a config key.
+
 ## How it works
 
 Testbench boots a skeleton Laravel application around your package; Canvas routes every generator through a pluggable *generator preset*. Partisan registers a preset that maps the generator targets onto your package:
