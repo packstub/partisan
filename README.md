@@ -18,6 +18,8 @@ vendor/bin/partisan make:model Invoice
 # → src/Models/Invoice.php with `namespace Acme\Widget\Models;`
 ```
 
+![In a package directory, php artisan make:model Invoice -mf --fields=... writes the model to src/Models, its factory and a matching migration, then php artisan partisan:check passes providers, migrations, Pint and autoload](https://raw.githubusercontent.com/packstub/art/main/partisan/docs/partisan.gif)
+
 ## What you get
 
 Partisan reads your package's `composer.json` and points the whole generator suite at it:
