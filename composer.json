@@ -3,6 +3,10 @@
     "description": "Artisan for Laravel packages — run make: generators from your package directory and get files in src/ with your package namespace. Built on Orchestra Testbench.",
     "keywords": ["laravel", "artisan", "package", "generator", "testbench", "workbench"],
     "license": "MIT",
+    "homepage": "https://packstub.dev/plugins/partisan",
+    "support": {
+        "docs": "https://packstub.dev/docs/partisan"
+    },
     "funding": [
         {
             "type": "github",

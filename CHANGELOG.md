@@ -3,6 +3,7 @@
 ## Unreleased
 
 - README: the Claude Code benchmark redone on 0.5.0 with `--fields`: $0.33 a task in agent mode against $0.62 by hand
+- `composer.json`'s homepage points at the package's page on packstub.dev
 
 ## 0.5.0 — 2026-09-17
 
