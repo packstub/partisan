@@ -2,8 +2,14 @@
 
 ## Unreleased
 
-- README: the Claude Code benchmark redone on 0.5.0 with `--fields`: $0.33 a task in agent mode against $0.62 by hand
+## 1.0.0
+
+Partisan is stable: its commands, the `--fields` syntax, the environment variables and the agent-mode output now follow semantic versioning. Nothing to change when you upgrade from 0.5.
+
+- The README says what 1.0 covers and lists every environment variable, `PARTISAN_WORKING_PATH` included
+- A smaller download: the launch copy, docs images and agent notes stay out of the Composer package
 - `composer.json` has a homepage and a docs link, both on packstub.dev
+- README: the Claude Code benchmark redone on 0.5.0 with `--fields`: $0.33 a task in agent mode against $0.62 by hand
 
 ## 0.5.0 — 2026-09-17
 

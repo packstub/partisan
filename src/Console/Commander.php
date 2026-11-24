@@ -2,16 +2,17 @@
 
 namespace Packstub\Partisan\Console;
 
+use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\Console\Commander as TestbenchCommander;
-use Packstub\Partisan\Agent\AgentMode;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
+use Packstub\Partisan\Agent\AgentMode;
 use Packstub\Partisan\PackageContext;
 use Packstub\Partisan\PartisanServiceProvider;
 
 class Commander extends TestbenchCommander
 {
-    /** @var array<int, class-string<\Illuminate\Support\ServiceProvider>> */
+    /** @var array<int, class-string<ServiceProvider>> */
     protected array $providers = [
         TestbenchServiceProvider::class,
         PartisanServiceProvider::class,

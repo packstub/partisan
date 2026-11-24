@@ -2,6 +2,7 @@
 
 namespace Packstub\Partisan\Console;
 
+use Filament\Facades\Filament;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Routing\Router;
@@ -121,7 +122,7 @@ class CheckCommand extends Command
 
     protected function filament(): void
     {
-        if (! class_exists(\Filament\Facades\Filament::class)) {
+        if (! class_exists(Filament::class)) {
             $this->item('filament', 'skip', 'filament/filament is not installed');
 
             return;
@@ -130,7 +131,7 @@ class CheckCommand extends Command
         try {
             $panels = [];
 
-            foreach (\Filament\Facades\Filament::getPanels() as $panel) {
+            foreach (Filament::getPanels() as $panel) {
                 $panels[] = \sprintf('%s: %d resources, %d pages', $panel->getId(), count($panel->getResources()), count($panel->getPages()));
             }
         } catch (Throwable $error) {
