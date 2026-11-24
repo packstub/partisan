@@ -1,13 +1,15 @@
 <?php
 
+use Symfony\Component\Process\Process;
+
 function fixturePintJson(array $rules = ['declare_strict_types' => true]): void
 {
     file_put_contents(test()->fixture.'/pint.json', json_encode(['preset' => 'laravel', 'rules' => $rules], JSON_PRETTY_PRINT));
 }
 
-function pintTest(string ...$paths): \Symfony\Component\Process\Process
+function pintTest(string ...$paths): Process
 {
-    $process = new \Symfony\Component\Process\Process([PHP_BINARY, 'vendor/bin/pint', '--test', ...$paths], test()->fixture, timeout: 120);
+    $process = new Process([PHP_BINARY, 'vendor/bin/pint', '--test', ...$paths], test()->fixture, timeout: 120);
     $process->run();
 
     return $process;

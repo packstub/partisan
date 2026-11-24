@@ -47,7 +47,7 @@ class ConsoleMakeCommand extends CanvasConsoleMakeCommand
 
         $provider = class_basename($target['provider']);
 
-        if (! $this->confirm("Register [".class_basename($className)."] in [{$provider}]?", true)) {
+        if (! $this->confirm('Register ['.class_basename($className)."] in [{$provider}]?", true)) {
             return;
         }
 

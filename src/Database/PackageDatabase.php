@@ -2,6 +2,7 @@
 
 namespace Packstub\Partisan\Database;
 
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Migrations\Migrator;
@@ -61,7 +62,7 @@ final class PackageDatabase
      */
     public function migrate(): array
     {
-        /** @var \Illuminate\Contracts\Config\Repository $config */
+        /** @var Repository $config */
         $config = $this->app->make('config');
 
         $config->set('database.connections.'.self::CONNECTION, [
