@@ -188,7 +188,18 @@ The Filament resource is where the generator pays for itself outright: every age
 
 ## Configuration
 
-Partisan needs none for the common case. It honors your `testbench.yaml` (providers, custom skeleton, migrations, seeders) exactly like the Testbench CLI. Set `PARTISAN_DISCOVER=0` to skip auto-registering the providers from `extra.laravel.providers`.
+Partisan needs none for the common case. It honors your `testbench.yaml` (providers, custom skeleton, migrations, seeders) exactly like the Testbench CLI. A few environment variables change the defaults:
+
+| Variable | Effect |
+| --- | --- |
+| `PARTISAN_DISCOVER=0` | Skip auto-registering the providers from `extra.laravel.providers` |
+| `PARTISAN_PINT=0` | Leave generated files as the stubs wrote them, without running Pint |
+| `PARTISAN_AGENT=1` / `0` | Force agent mode on or off instead of detecting the agent |
+| `PARTISAN_WORKING_PATH` | The package directory to work on, when it is not the current directory (`TESTBENCH_WORKING_PATH` works too) |
+
+## Versioning
+
+Partisan follows semantic versioning from 1.0. The stable surface is what you type and what you read: the commands (`partisan:about`, `partisan:check`, `partisan:install`) and their options, the options Partisan adds to the `make:` generators (`--fields` and its syntax, `--no-register`), the environment variables above, the exit codes, and the shape of agent-mode output (`created[n]`, `updated[n]`, `formatted[n]`, `help[n]`). The PHP classes under `src/` are internal and may change in any release. The `make:` generators themselves come from Laravel, Canvas and Filament, so their own options follow those packages.
 
 ## Notes
 
