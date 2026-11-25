@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.0.0
+## 1.0.0 — 2026-11-25
 
 Partisan is stable: its commands, the `--fields` syntax, the environment variables and the agent-mode output now follow semantic versioning. Nothing to change when you upgrade from 0.5.
 
